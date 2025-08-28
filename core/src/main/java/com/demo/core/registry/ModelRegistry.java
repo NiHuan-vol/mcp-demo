@@ -179,7 +179,27 @@ public class ModelRegistry {
     private void handleVectorSearchRequest(AIRequest request, AIResponse response, ModelInfo modelInfo) {
         try {
             // 从请求中获取搜索参数
-            List<Float> queryVector = (List<Float>) request.getParameters().getOrDefault("queryVector", java.util.Collections.emptyList());
+            Object queryVectorObj = request.getParameters().getOrDefault("queryVector", java.util.Collections.emptyList());
+            List<Float> queryVector = new java.util.ArrayList<>();
+            if (queryVectorObj instanceof List) {
+                for (Object item : (List<?>) queryVectorObj) {
+                    if (item instanceof Number) {
+                        queryVector.add(((Number) item).floatValue());
+                    } else if (item instanceof String) {
+                        try {
+                            queryVector.add(Float.parseFloat((String) item));
+                        } catch (NumberFormatException e) {
+                            // 忽略无法解析的字符串
+                        }
+                    }
+                }
+            } else if (queryVectorObj instanceof String) {
+                try {
+                    queryVector.add(Float.parseFloat((String) queryVectorObj));
+                } catch (NumberFormatException e) {
+                    // 忽略无法解析的字符串
+                }
+            }
             Integer topK = (Integer) request.getParameters().getOrDefault("topK", 5);
             String collectionName = (String) request.getParameters().getOrDefault("collectionName", 
                     modelInfo.getConfiguration().getOrDefault("defaultCollection", "default_collection"));

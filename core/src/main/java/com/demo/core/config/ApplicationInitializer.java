@@ -3,7 +3,6 @@ package com.demo.core.config;
 import com.demo.core.filter.TextContentFilter;
 import com.demo.core.registry.ModelInfo;
 import com.demo.core.registry.ModelRegistry;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;

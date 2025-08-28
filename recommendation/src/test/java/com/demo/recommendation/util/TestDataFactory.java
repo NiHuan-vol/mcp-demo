@@ -4,9 +4,13 @@ import com.demo.recommendation.mcp.assistant.AssistantRequest;
 import com.demo.recommendation.mcp.assistant.AssistantResponse;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import org.apache.commons.collections4.map.HashedMap;
 
 /**
  * 测试数据工厂类，用于生成各类测试数据
@@ -23,8 +27,8 @@ public class TestDataFactory {
         request.setRequestId(generateRequestId());
         request.setUserId(userId);
         request.setRequestType("SMART_ROUTE_PLANNING");
-        request.setRequestContent("规划从北京到上海的自驾游路线");
-        request.setTimestamp(LocalDateTime.now());
+        request.setContent("规划从北京到上海的自驾游路线");
+        request.setTimestamp(System.currentTimeMillis());
         
         Map<String, Object> params = new HashMap<>();
         params.put("startLocation", "北京");
@@ -36,7 +40,7 @@ public class TestDataFactory {
         params.put("includeHotels", true);
         params.put("avoidHighways", false);
         params.put("avoidTolls", false);
-        request.setParams(params);
+        request.setParameters(params);
         
         Map<String, Object> context = new HashMap<>();
         context.put("tripType", "自驾游");
@@ -63,15 +67,15 @@ public class TestDataFactory {
         request.setRequestId(generateRequestId());
         request.setUserId(userId);
         request.setRequestType("ALONG_ROUTE_SERVICE_RECOMMENDATION");
-        request.setRequestContent("推荐路线沿途的加油站和餐厅");
-        request.setTimestamp(LocalDateTime.now());
+        request.setContent("推荐路线沿途的加油站和餐厅");
+        request.setTimestamp(System.currentTimeMillis());
         
         Map<String, Object> params = new HashMap<>();
         params.put("routeId", "test_route_001");
         params.put("serviceTypes", new String[]{"gasStation", "restaurant"});
         params.put("radius", 5.0);
         params.put("ratingThreshold", 4.5);
-        request.setParams(params);
+        request.setParameters(params);
         
         return request;
     }
@@ -86,15 +90,15 @@ public class TestDataFactory {
         request.setRequestId(generateRequestId());
         request.setUserId(userId);
         request.setRequestType("INTELLIGENT_TRANSLATION");
-        request.setRequestContent("将英文翻译为中文");
-        request.setTimestamp(LocalDateTime.now());
+        request.setContent("将英文翻译为中文");
+    request.setTimestamp(System.currentTimeMillis());
         
         Map<String, Object> params = new HashMap<>();
         params.put("text", "The scenery along the highway is beautiful. We should stop to take some photos.");
         params.put("sourceLanguage", "en");
         params.put("targetLanguage", "zh");
         params.put("provider", "baidu");
-        request.setParams(params);
+        request.setParameters(params);
         
         return request;
     }
@@ -109,8 +113,8 @@ public class TestDataFactory {
         request.setRequestId(generateRequestId());
         request.setUserId(userId);
         request.setRequestType("SOCIAL_AND_GUIDE_RECOMMENDATION");
-        request.setRequestContent("推荐目的地的网红景点和美食攻略");
-        request.setTimestamp(LocalDateTime.now());
+        request.setContent("推荐目的地的网红景点和美食攻略");
+       request.setTimestamp(System.currentTimeMillis());
         
         Map<String, Object> params = new HashMap<>();
         params.put("location", "上海");
@@ -118,7 +122,7 @@ public class TestDataFactory {
         params.put("maxDuration", 3);
         params.put("popularityThreshold", 4.5);
         params.put("sourcePlatforms", new String[]{"xiaohongshu", "tripadvisor"});
-        request.setParams(params);
+        request.setParameters(params);
         
         return request;
     }
@@ -133,8 +137,8 @@ public class TestDataFactory {
         request.setRequestId(generateRequestId());
         request.setUserId(userId);
         request.setRequestType("EMERGENCY_SERVICE");
-        request.setRequestContent("车辆在路上爆胎，需要道路救援");
-        request.setTimestamp(LocalDateTime.now());
+        request.setTimestamp(System.currentTimeMillis());
+        request.setContent("车辆在路上爆胎，需要道路救援");
         
         Map<String, Object> params = new HashMap<>();
         params.put("location", "北京市朝阳区建国路88号");
@@ -148,7 +152,7 @@ public class TestDataFactory {
         vehicleInfo.put("color", "白色");
         
         params.put("vehicleInfo", vehicleInfo);
-        request.setParams(params);
+        request.setParameters(params);
         
         return request;
     }
@@ -164,8 +168,8 @@ public class TestDataFactory {
         request.setRequestId(generateRequestId());
         request.setUserId(userId);
         request.setRequestType("GENERAL_CHAT");
-        request.setRequestContent(message);
-        request.setTimestamp(LocalDateTime.now());
+        request.setContent(message);
+        request.setTimestamp(System.currentTimeMillis());
         
         return request;
     }
@@ -183,7 +187,7 @@ public class TestDataFactory {
         response.setStatus("SUCCESS");
         response.setContent("操作成功");
         response.setData(data);
-        response.setProcessTime(123); // 模拟处理时间，毫秒
+        response.setProcessingTime(123); // 模拟处理时间，毫秒
         
         Map<String, Object> metadata = new HashMap<>();
         metadata.put("serviceVersion", "1.0.0");
@@ -205,7 +209,7 @@ public class TestDataFactory {
         response.setRequestId(request.getRequestId());
         response.setStatus("ERROR");
         response.setErrorMessage(errorMessage);
-        response.setProcessTime(50); // 模拟处理时间，毫秒
+        response.setProcessingTime(50); // 模拟处理时间，毫秒
         
         Map<String, Object> metadata = new HashMap<>();
         metadata.put("serviceVersion", "1.0.0");
@@ -258,8 +262,8 @@ public class TestDataFactory {
      * 创建模拟的景点数据
      * @return 景点数据数组
      */
-    private static Map<String, Object>[] createMockAttractions() {
-        Map<String, Object>[] attractions = new Map[3];
+    private static List<Map<String, Object>> createMockAttractions() {
+        List<Map<String, Object>> attractions = new ArrayList<>();
         
         Map<String, Object> attraction1 = new HashMap<>();
         attraction1.put("id", "attraction_001");
@@ -267,7 +271,7 @@ public class TestDataFactory {
         attraction1.put("location", "山东省泰安市");
         attraction1.put("rating", 4.8);
         attraction1.put("description", "五岳之首，中国著名的旅游胜地");
-        attractions[0] = attraction1;
+        attractions.add(attraction1);
         
         Map<String, Object> attraction2 = new HashMap<>();
         attraction2.put("id", "attraction_002");
@@ -275,7 +279,7 @@ public class TestDataFactory {
         attraction2.put("location", "江苏省南京市");
         attraction2.put("rating", 4.7);
         attraction2.put("description", "中国四大文庙之一，历史文化底蕴深厚");
-        attractions[1] = attraction2;
+        attractions.add(attraction2);
         
         Map<String, Object> attraction3 = new HashMap<>();
         attraction3.put("id", "attraction_003");
@@ -283,7 +287,7 @@ public class TestDataFactory {
         attraction3.put("location", "上海市黄浦区");
         attraction3.put("rating", 4.9);
         attraction3.put("description", "上海的标志性景点，欣赏黄浦江两岸的美景");
-        attractions[2] = attraction3;
+        attractions.add(attraction3);
         
         return attractions;
     }
@@ -292,8 +296,8 @@ public class TestDataFactory {
      * 创建模拟的餐厅数据
      * @return 餐厅数据数组
      */
-    private static Map<String, Object>[] createMockRestaurants() {
-        Map<String, Object>[] restaurants = new Map[3];
+    private static List<Map<String, Object>> createMockRestaurants() {
+        List<Map<String, Object>> restaurants = new ArrayList<>();
         
         Map<String, Object> restaurant1 = new HashMap<>();
         restaurant1.put("id", "rest_001");
@@ -302,7 +306,7 @@ public class TestDataFactory {
         restaurant1.put("rating", 4.8);
         restaurant1.put("cuisine", "北京烤鸭");
         restaurant1.put("priceLevel", "人均200元");
-        restaurants[0] = restaurant1;
+        restaurants.add(restaurant1);
         
         Map<String, Object> restaurant2 = new HashMap<>();
         restaurant2.put("id", "rest_002");
@@ -311,7 +315,7 @@ public class TestDataFactory {
         restaurant2.put("rating", 4.6);
         restaurant2.put("cuisine", "南京菜");
         restaurant2.put("priceLevel", "人均80元");
-        restaurants[1] = restaurant2;
+        restaurants.add(restaurant2);
         
         Map<String, Object> restaurant3 = new HashMap<>();
         restaurant3.put("id", "rest_003");
@@ -320,7 +324,7 @@ public class TestDataFactory {
         restaurant3.put("rating", 4.7);
         restaurant3.put("cuisine", "上海小吃");
         restaurant3.put("priceLevel", "人均60元");
-        restaurants[2] = restaurant3;
+        restaurants.add(restaurant3);
         
         return restaurants;
     }
@@ -329,8 +333,8 @@ public class TestDataFactory {
      * 创建模拟的酒店数据
      * @return 酒店数据数组
      */
-    private static Map<String, Object>[] createMockHotels() {
-        Map<String, Object>[] hotels = new Map[3];
+    private static List<Map<String, Object>> createMockHotels() {
+        List<Map<String, Object>> hotels = new ArrayList<>();
         
         Map<String, Object> hotel1 = new HashMap<>();
         hotel1.put("id", "hotel_001");
@@ -339,7 +343,7 @@ public class TestDataFactory {
         hotel1.put("rating", 4.8);
         hotel1.put("pricePerNight", 780.0);
         hotel1.put("starRating", 5);
-        hotels[0] = hotel1;
+        hotels.add(hotel1);
         
         Map<String, Object> hotel2 = new HashMap<>();
         hotel2.put("id", "hotel_002");
@@ -348,7 +352,7 @@ public class TestDataFactory {
         hotel2.put("rating", 4.2);
         hotel2.put("pricePerNight", 230.0);
         hotel2.put("starRating", 3);
-        hotels[1] = hotel2;
+        hotels.add(hotel2);
         
         Map<String, Object> hotel3 = new HashMap<>();
         hotel3.put("id", "hotel_003");
@@ -357,7 +361,7 @@ public class TestDataFactory {
         hotel3.put("rating", 4.9);
         hotel3.put("pricePerNight", 1800.0);
         hotel3.put("starRating", 5);
-        hotels[2] = hotel3;
+        hotels.add(hotel3);
         
         return hotels;
     }

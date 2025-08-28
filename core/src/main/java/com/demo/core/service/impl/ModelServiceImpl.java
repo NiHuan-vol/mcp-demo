@@ -12,7 +12,6 @@ import reactor.core.scheduler.Schedulers;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * 大模型服务实现类
@@ -60,14 +59,14 @@ public class ModelServiceImpl implements ModelService {
     
     @Override
     public Flux<ModelEntity> getModelsByType(String modelType) {
-        return Flux.fromCallable(() -> {
+        return Mono.fromCallable(() -> {
             return modelRepository.findByModelType(modelType);
         }).subscribeOn(Schedulers.boundedElastic()).flatMapMany(Flux::fromIterable);
     }
     
     @Override
     public Flux<ModelEntity> getEnabledModels() {
-        return Flux.fromCallable(() -> {
+        return Mono.fromCallable(() -> {
             return modelRepository.findEnabledModels();
         }).subscribeOn(Schedulers.boundedElastic()).flatMapMany(Flux::fromIterable);
     }

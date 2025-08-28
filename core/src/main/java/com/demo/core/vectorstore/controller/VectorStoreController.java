@@ -1,6 +1,5 @@
 package com.demo.core.vectorstore.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +18,6 @@ public class VectorStoreController {
 
     private final VectorStoreService vectorStoreService;
 
-    @Autowired
     public VectorStoreController(VectorStoreService vectorStoreService) {
         this.vectorStoreService = vectorStoreService;
     }

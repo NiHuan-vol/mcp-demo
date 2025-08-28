@@ -1,0 +1,60 @@
+# MCP客户端配置示例
+# 复制此文件并重命名为application.yml以使用自定义配置
+
+mcp:
+  client:
+    # 基础配置
+    base-url: http://localhost:8080/mcp
+    connect-timeout: 5000
+    read-timeout: 30000
+    write-timeout: 30000
+    max-retries: 3
+    retry-interval: 1000
+    
+    # 认证配置
+    auth-token: "your-auth-token"
+    api-key: "your-api-key"
+    
+    # 小程序相关配置
+    mini-program:
+      # 小程序应用密钥，用于签名验证
+      app-secret: "your-mini-program-secret"
+      
+      # 请求超时时间（毫秒），用于时间戳验证
+      request-timeout: 30000
+      
+      # 日志配置
+      logging:
+        enabled: true
+        level: INFO
+        # 是否记录请求和响应的详细信息
+        log-details: true
+
+# Spring Boot配置
+spring:
+  application:
+    name: mcp-client
+  
+  # WebFlux配置
+  webflux:
+    base-path: /api
+    
+  # 日志配置
+  logging:
+    level:
+      com.demo.mcp.client: INFO
+      # 可以根据需要调整不同包的日志级别
+      com.demo.mcp.client.controller: DEBUG
+
+# 服务器配置
+server:
+  port: 9090
+  error:
+    include-message: always
+    include-binding-errors: always
+
+# 自定义配置项
+custom:
+  # 可以添加自定义的配置项
+  feature-flag:
+    enable-new-api: true

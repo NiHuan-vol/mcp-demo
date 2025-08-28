@@ -1,7 +1,10 @@
 package com.demo.recommendation.mcp.gateway;
 
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.time.LocalDateTime;
 
@@ -95,7 +98,7 @@ public class EmergencyServiceGateway implements McpGateway {
         result.put("radius", radius);
         
         // 示例救援点数据
-        Map<String, Object>[] rescuePoints = new Map[limit];
+        List<Map<String, Object>> rescuePoints = new ArrayList<>();
         for (int i = 0; i < limit; i++) {
             Map<String, Object> point = new HashMap<>();
             point.put("id", "rescue_point_" + i);
@@ -107,11 +110,11 @@ public class EmergencyServiceGateway implements McpGateway {
             point.put("isOpen", true);
             point.put("rating", 4.6 - i * 0.1);
             
-            rescuePoints[i] = point;
+            rescuePoints.add(point);
         }
         
         result.put("rescuePoints", rescuePoints);
-        result.put("totalCount", rescuePoints.length);
+        result.put("totalCount", rescuePoints.size());
         
         return result;
     }

@@ -1,6 +1,9 @@
 package com.demo.recommendation.mcp.assistant;
 
 import com.demo.recommendation.mcp.gateway.*;
+
+import reactor.core.publisher.Mono;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -59,14 +62,14 @@ class TravelAssistantImplTest {
         request.setRequestId("req_001");
         request.setUserId("user_001");
         request.setRequestType("SMART_ROUTE_PLANNING");
-        request.setRequestContent("规划从北京到上海的路线");
+        request.setContent("规划从北京到上海的路线");
         
         Map<String, Object> params = new HashMap<>();
         params.put("startLocation", "北京");
         params.put("endLocation", "上海");
         params.put("preferences", "风景优先");
         params.put("mapProvider", "amap");
-        request.setParams(params);
+        request.setParameters(params);
         
         // 模拟地图服务返回
         Map<String, Object> mapResult = new HashMap<>();
@@ -82,13 +85,13 @@ class TravelAssistantImplTest {
         when(weatherServiceGateway.getWeatherInfo(anyString())).thenReturn(weatherResult);
         
         // 执行测试
-        AssistantResponse response = travelAssistant.processRequest(request);
+        Mono<AssistantResponse> response = travelAssistant.processRequest(request);
         
         // 验证结果
         assertNotNull(response);
-        assertEquals("req_001", response.getRequestId());
-        assertEquals("SUCCESS", response.getStatus());
-        assertNotNull(response.getData());
+        assertEquals("req_001", response.block().getRequestId());
+        assertEquals("SUCCESS", response.block().getStatus());
+        assertNotNull(response.block().getData());
     }
 
     @Test
@@ -98,13 +101,13 @@ class TravelAssistantImplTest {
         request.setRequestId("req_002");
         request.setUserId("user_001");
         request.setRequestType("ALONG_ROUTE_SERVICE_RECOMMENDATION");
-        request.setRequestContent("推荐沿途加油站");
+        request.setContent("推荐沿途加油站");
         
         Map<String, Object> params = new HashMap<>();
         params.put("routeId", "route_001");
         params.put("serviceType", "gasStation");
         params.put("radius", 5.0);
-        request.setParams(params);
+        request.setParameters(params);
         
         // 模拟服务推荐返回
         Map<String, Object> serviceResult = new HashMap<>();
@@ -114,12 +117,12 @@ class TravelAssistantImplTest {
                 .thenReturn(serviceResult);
         
         // 执行测试
-        AssistantResponse response = travelAssistant.processRequest(request);
+        Mono<AssistantResponse> response = travelAssistant.processRequest(request);
         
         // 验证结果
         assertNotNull(response);
-        assertEquals("req_002", response.getRequestId());
-        assertEquals("SUCCESS", response.getStatus());
+        assertEquals("req_002", response.block().getRequestId());
+        assertEquals("SUCCESS", response.block().getStatus());
     }
 
     @Test
@@ -129,14 +132,14 @@ class TravelAssistantImplTest {
         request.setRequestId("req_003");
         request.setUserId("user_001");
         request.setRequestType("INTELLIGENT_TRANSLATION");
-        request.setRequestContent("翻译这段文字");
+        request.setContent("翻译这段文字");
         
         Map<String, Object> params = new HashMap<>();
         params.put("text", "Hello, world!");
         params.put("sourceLanguage", "en");
         params.put("targetLanguage", "zh");
         params.put("provider", "baidu");
-        request.setParams(params);
+        request.setParameters(params);
         
         // 模拟翻译服务返回
         Map<String, Object> translateResult = new HashMap<>();
@@ -146,12 +149,12 @@ class TravelAssistantImplTest {
                 .thenReturn(translateResult);
         
         // 执行测试
-        AssistantResponse response = travelAssistant.processRequest(request);
+        Mono<AssistantResponse> response = travelAssistant.processRequest(request);
         
         // 验证结果
         assertNotNull(response);
-        assertEquals("req_003", response.getRequestId());
-        assertEquals("SUCCESS", response.getStatus());
+        assertEquals("req_003", response.block().getRequestId());
+        assertEquals("SUCCESS", response.block().getStatus());
     }
 
     @Test
@@ -161,7 +164,7 @@ class TravelAssistantImplTest {
         request.setRequestId("req_004");
         request.setUserId("user_001");
         request.setRequestType("EMERGENCY_SERVICE");
-        request.setRequestContent("请求道路救援");
+        request.setContent("请求道路救援");
         
         Map<String, Object> params = new HashMap<>();
         params.put("location", "北京市朝阳区建国路88号");
@@ -170,7 +173,7 @@ class TravelAssistantImplTest {
         vehicleInfo.put("brand", "丰田");
         vehicleInfo.put("model", "卡罗拉");
         params.put("vehicleInfo", vehicleInfo);
-        request.setParams(params);
+        request.setParameters(params);
         
         // 模拟紧急服务返回
         Map<String, Object> emergencyResult = new HashMap<>();
@@ -179,12 +182,12 @@ class TravelAssistantImplTest {
                 .thenReturn(emergencyResult);
         
         // 执行测试
-        AssistantResponse response = travelAssistant.processRequest(request);
+        Mono<AssistantResponse> response = travelAssistant.processRequest(request);
         
         // 验证结果
         assertNotNull(response);
-        assertEquals("req_004", response.getRequestId());
-        assertEquals("SUCCESS", response.getStatus());
+        assertEquals("req_004", response.block().getRequestId());
+        assertEquals("SUCCESS", response.block().getStatus());
     }
 
     @Test
@@ -194,15 +197,15 @@ class TravelAssistantImplTest {
         request.setRequestId("req_005");
         request.setUserId("user_001");
         request.setRequestType("INVALID_TYPE");
-        request.setRequestContent("无效的请求类型");
+        request.setContent("无效的请求类型");
         
         // 执行测试
-        AssistantResponse response = travelAssistant.processRequest(request);
+        Mono<AssistantResponse> response = travelAssistant.processRequest(request);
         
         // 验证结果
         assertNotNull(response);
-        assertEquals("req_005", response.getRequestId());
-        assertEquals("ERROR", response.getStatus());
-        assertNotNull(response.getErrorMessage());
+        assertEquals("req_005", response.block().getRequestId());
+        assertEquals("ERROR", response.block().getStatus());
+        assertNotNull(response.block().getErrorMessage());
     }
 }

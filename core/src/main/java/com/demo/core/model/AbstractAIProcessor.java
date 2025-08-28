@@ -1,7 +1,5 @@
 package com.demo.core.model;
 
-import reactor.core.publisher.Mono;
-
 /**
  * AI处理器的抽象实现，提供了基础功能
  */

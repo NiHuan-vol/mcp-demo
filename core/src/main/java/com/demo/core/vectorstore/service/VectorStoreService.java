@@ -8,12 +8,8 @@ import io.milvus.param.collection.*;
 import io.milvus.param.dml.InsertParam;
 import io.milvus.param.dml.SearchParam;
 import io.milvus.param.dml.DeleteParam;
-import io.milvus.param.index.CreateIndexParam;
-import io.milvus.response.SearchResultsWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.nio.ByteBuffer;
 import java.util.*;
 
 /**
@@ -24,7 +20,6 @@ public class VectorStoreService {
 
     private final MilvusServiceClient milvusClient;
 
-    @Autowired
     public VectorStoreService(MilvusServiceClient milvusClient) {
         this.milvusClient = milvusClient;
     }
@@ -40,7 +35,7 @@ public class VectorStoreService {
             return;
         }
 
-        // 创建集合 - 简化实现，不使用withDimension方法
+        // 创建集合并设置向量维度
         CreateCollectionParam createParam = CreateCollectionParam.newBuilder()
                 .withCollectionName(collectionName)
                 .build();
@@ -106,8 +101,18 @@ public class VectorStoreService {
         // 检查集合是否存在
         if (!collectionExists(collectionName)) {
             // 从第一个向量获取维度
-            List<Float> firstVector = (List<Float>) vectors.get(0).get("vector");
-            createCollection(collectionName, firstVector.size());
+            Object vectorObj = vectors.get(0).get("vector");
+            if (vectorObj instanceof List) {
+                try {
+                    @SuppressWarnings("unchecked")
+                    List<Float> firstVector = (List<Float>) vectorObj;
+                    createCollection(collectionName, firstVector.size());
+                } catch (ClassCastException e) {
+                    throw new RuntimeException("Invalid vector data type. Expected List<Float>.", e);
+                }
+            } else {
+                throw new RuntimeException("Vector data is not a list.");
+            }
         }
 
         // 准备数据
@@ -169,6 +174,9 @@ public class VectorStoreService {
             // 直接使用SearchResults对象，不通过SearchResultsWrapper
             SearchResults searchResults = response.getData();
             // Milvus SDK 2.3.0不支持SearchResultsWrapper，简化实现
+
+        } else {
+            System.err.println("Search failed: " + response.getMessage());
             // 返回空列表，因为无法正确处理SearchResults
         }
         

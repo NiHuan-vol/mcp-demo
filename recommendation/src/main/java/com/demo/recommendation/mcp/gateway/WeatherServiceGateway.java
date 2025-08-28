@@ -1,7 +1,10 @@
 package com.demo.recommendation.mcp.gateway;
 
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.time.LocalDateTime;
 
@@ -79,7 +82,7 @@ public class WeatherServiceGateway implements McpGateway {
         result.put("forecastDays", days);
         
         // 示例预报数据
-        Map<String, Object>[] forecasts = new Map[days];
+        List<Map<String, Object>> forecasts = new ArrayList<>();
         for (int i = 0; i < days; i++) {
             Map<String, Object> forecast = new HashMap<>();
             forecast.put("date", LocalDateTime.now().plusDays(i).toLocalDate());
@@ -92,7 +95,7 @@ public class WeatherServiceGateway implements McpGateway {
                 forecast.put("weather", i % 2 == 0 ? "sunny" : "cloudy");
                 forecast.put("temperature", 25 + i);
             }
-            forecasts[i] = forecast;
+            forecasts.add(forecast);
         }
         
         result.put("forecasts", forecasts);
